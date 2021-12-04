@@ -1,4 +1,4 @@
-<!doctype html>
+t<!doctype html>
 <html>
   <head>
     <title>WebMapping</title>
@@ -81,12 +81,12 @@ var OSM = new ol.layer.Tile({
         })
       });
 
-      var batiment = new ol.layer.Image({
+      var batiment = new ol.layer.VectorImage({
         title: "buildings",
-        source: new ol.source.ImageWMS({
-          url: "http://localhost:8080/geoserver/wms",
-          params: {"LAYERS": "BD_TOPO:buildings"},
-          serverType: "geoserver"
+        source: new ol.source.Vector({
+		format: new ol.format.GeoJSON(),
+          url: "https://raw.githubusercontent.com/ferielH/App1/main/Buildings.geojson",
+          
         })
       });
 
