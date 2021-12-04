@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WebMapping</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="http://localhost:8080/Application1_WM/v6.5.0/css/ol.css" type="text/css">
+		<link rel="stylesheet" href="http://localhost:8080/Application1_WM/v6.5.0/examples/resources/layout.css" type="text/css">
+		<link rel="stylesheet" href="http://localhost:8080/Application1_WM/ol-layerswitcher-master/dist/ol-layerswitcher.css" />
+
+
+	  <script src="http://localhost:8080/Application1_WM/v6.5.0/build/ol.js"></script>
+	  <script src="http://localhost:8080/Application1_WM/ol-layerswitcher-master/dist/ol-layerswitcher.js"></script>
+	
+    <style type="text/css"> 
+    html, body {
+	height: 100%
+	}
+	#map {
+        height: 88%;
+        width: 100%;
+      }
+	  .layer-switcher.shown {
+      max-height: 465px;
+     }
+      h1{
+        text-align: center;
+        background: red;
+      }
+      </style>
+  </head>
+  <body>
+    <h1>Application WebMapping</h1>
+    <div id="map"> </div>
+    <script type="text/javascript">
+      (function () {
+
+        var view = new ol.View({
+  projection:"EPSG:4326",
+  center:[10.251593679820122, 36.68612018374516],
+  zoom:10
+});
+var map =new ol.Map({
+  target:"map",
+  view: view,
+});
+var OSM = new ol.layer.Tile({
+        title: 'Open Street Map',
+        type: 'base',
+        visible: true,
+        'opacity': 1.000000,
+          source: new ol.source.OSM()
+      });
+      var GS = new ol.layer.Tile({
+                        title: 'Google Satellite',
+                        type: 'base',
+                        visible: true,
+                                  'opacity': 1.000000,
+
+                        source: new ol.source.XYZ({
+                        attributions: ' ',
+                                  url: 'http://mt1.google.com/vt/lyrs=s&hl=pl&&x={x}&y={y}&z={z}'
+                    })
+                    });
+      var TopographicMap = new ol.layer.Tile ({
+        title: 'Topographic Map',
+        type: 'base',
+        visible: true,
+        'opacity':1.000000,
+        source: new ol.source.XYZ({
+          url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png'
+        })
+      });
+
+      var ecole = new ol.layer.Image({
+        title: "ecole",
+        source: new ol.source.ImageWMS({
+          url: "http://localhost:8080/geoserver/wms",
+          params: {"LAYERS": "BD_TOPO:ecole"},
+          serverType: "geoserver"
+        })
+      });
+
+      var batiment = new ol.layer.Image({
+        title: "buildings",
+        source: new ol.source.ImageWMS({
+          url: "http://localhost:8080/geoserver/wms",
+          params: {"LAYERS": "BD_TOPO:buildings"},
+          serverType: "geoserver"
+        })
+      });
+
+       var chemin_fer = new ol.layer.Image({
+        title: "railways",
+        source: new ol.source.ImageWMS({
+          url: "http://localhost:8080/geoserver/wms",
+          params: {"LAYERS": "BD_TOPO:railways"},
+          serverType: "geoserver"
+        })
+      });
+  
+       var Villes = new ol.layer.Image({
+        title: "places",
+        source: new ol.source.ImageWMS({
+          url: "http://localhost:8080/geoserver/wms",
+          params: {"LAYERS": "  BD_TOPO:places"},
+          serverType: "geoserver"
+        })
+      });
+
+      map.addLayer(OSM);
+      map.addLayer(GS);
+      map.addLayer(TopographicMap);
+      map.addLayer(ecole);
+      map.addLayer(batiment);
+      map.addLayer(chemin_fer);
+      map.addLayer(Villes);
+
+	  //Position de la souris
+  var mouse_position = new ol.control.MousePosition();
+  map.addControl(mouse_position);
+
+  //Echelle
+  var echel = new ol.control.ScaleLine();
+  map.addControl(echel);
+
+
+	  var layerSwitcher = new ol.control.LayerSwitcher({
+    activationMode: 'click',
+    startActive: true,
+    tipLabel: 'Layers', // Optional label for button
+    groupSelectStyle: 'children', // Can be 'children' [default], 'group' or 'none'
+    collapseTipLabel: 'Collapse layers',
+  });
+  map.addControl(layerSwitcher);
+
+})();
+
+    </script>
+  </body>
+</html>
